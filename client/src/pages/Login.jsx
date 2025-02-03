@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useLoginMutation, useRegisterMutation } from "@/features/api/authApi";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const Login = () => {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -19,6 +22,26 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const [
+    register,
+    {
+      data: registerData,
+      error: registerError,
+      isLoading: isLoadingRegister,
+      isSuccess: isSuccessRegister,
+    },
+  ] = useRegisterMutation();
+
+  const [
+    login,
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: isLoadingLogin,
+      isSuccess: isSuccessLogin,
+    },
+  ] = useLoginMutation();
 
   const handleChange = (e, type) => {
     const { name, value } = e.target;
@@ -30,13 +53,39 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (type) => {
-    if (type === "signup") {
-      console.log(signUpForm);
-    } else {
-      console.log(loginForm);
-    }
+  const handleSubmit = async (type) => {
+    const inputData = type === "signup" ? signUpForm : loginForm;
+    const action = type === "signup" ? register : login;
+
+    await action(inputData);
   };
+
+  useEffect(() => {
+    if (isSuccessRegister && registerData) {
+      toast.success(registerData.message || "Signed Up Successfully");
+    }
+
+    if (registerError) {
+      toast.error(registerError?.data?.message || "Something went wrong");
+    }
+
+    if (isSuccessLogin && loginData) {
+      toast.success(loginData.message || "Logged In Successfully");
+    }
+
+    if (loginError) {
+      toast.error(loginError?.data?.message || "Something went wrong");
+    }
+  }, [
+    isLoadingLogin,
+    isLoadingRegister,
+    loginData,
+    registerData,
+    loginError,
+    registerError,
+    isSuccessRegister,
+    isSuccessLogin,
+  ]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
@@ -92,7 +141,18 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => handleSubmit("signup")}>Sign Up</Button>
+              <Button
+                disabled={isLoadingRegister}
+                onClick={() => handleSubmit("signup")}
+              >
+                {isLoadingRegister ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" /> Please wait
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -128,7 +188,18 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => handleSubmit("login")}>Login</Button>
+              <Button
+                disabled={isLoadingLogin}
+                onClick={() => handleSubmit("login")}
+              >
+                {isLoadingLogin ? (
+                  <>
+                    <Loader2 className="mr-2 size-4 animate-spin" /> Please wait
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
