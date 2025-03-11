@@ -22,7 +22,7 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <School size={"30"} />
           <h1 className="hidden md:block font-extrabold text-2xl">
-            E-Learning
+            <a href="/">E-Learning</a>
           </h1>
         </div>
 
