@@ -12,6 +12,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "./DarkMode";
 import MobileNav from "./MobileNav";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const user = true;
@@ -46,7 +47,9 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>My Learning</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/my-learning">My Learning</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Edit Profile</DropdownMenuItem>
                   <DropdownMenuItem>Log out</DropdownMenuItem>
                 </DropdownMenuGroup>
