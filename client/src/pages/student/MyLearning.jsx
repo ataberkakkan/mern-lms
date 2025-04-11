@@ -24,7 +24,9 @@ const MyLearning = () => {
 
   return (
     <div className="max-w-4xl mx-auto my-24 px-4 md:px-0">
-      <h1 className="font-bold text-2xl ">My Learning</h1>
+      <h1 className="font-bold text-2xl text-center md:text-left">
+        My Learning
+      </h1>
 
       <div className="my-5">
         {isLoading ? (
