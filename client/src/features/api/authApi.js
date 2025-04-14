@@ -20,7 +20,7 @@ export const authApi = createApi({
         method: "POST",
         body: formData,
       }),
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           dispatch(userLoggedIn({ user: result.data.user }));
@@ -35,8 +35,20 @@ export const authApi = createApi({
         method: "GET",
       }),
     }),
+    updateUser: builder.mutation({
+      query: (formData) => ({
+        url: "/profile/update",
+        method: "PUT",
+        body: formData,
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLoadUserQuery } =
-  authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLoadUserQuery,
+  useUpdateUserMutation,
+} = authApi;

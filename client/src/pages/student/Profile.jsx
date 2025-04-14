@@ -13,12 +13,53 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import CourseCard from "./CourseCard";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import {
+  useLoadUserQuery,
+  useUpdateUserMutation,
+} from "@/features/api/authApi";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Profile = () => {
-  const { data, isLoading } = useLoadUserQuery();
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
+
+  const { data, isLoading, refetch } = useLoadUserQuery();
+  const [
+    updateUser,
+    {
+      data: updateUserData,
+      isLoading: updateUserLoading,
+      error: updateUserError,
+      isSuccess,
+    },
+  ] = useUpdateUserMutation();
+
+  const onChangeHandler = async (e) => {
+    const file = e.target.files[0];
+    if (file) setProfilePhoto(file);
+  };
 
   const { user } = data || {};
+
+  const handleUpdateUser = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
+
+    await updateUser(formData);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      toast.success(updateUserData.message || "Profile updated successfully!");
+    }
+
+    if (updateUserError) {
+      toast.error(updateUserError?.data?.message || "Something went wrong!");
+    }
+  }, [updateUserError, updateUserData, isSuccess, refetch]);
 
   if (isLoading)
     return (
@@ -91,6 +132,8 @@ const Profile = () => {
                   <Label>Name</Label>
                   <Input
                     type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Name"
                     className="col-span-3"
                   />
@@ -98,13 +141,18 @@ const Profile = () => {
 
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Profile Photo</Label>
-                  <Input type="file" accept="image/*" className="col-span-3" />
+                  <Input
+                    onChange={onChangeHandler}
+                    type="file"
+                    accept="image/*"
+                    className="col-span-3"
+                  />
                 </div>
               </div>
 
               <DialogFooter>
-                <Button disabled={isLoading}>
-                  {isLoading ? (
+                <Button disabled={updateUserLoading} onClick={handleUpdateUser}>
+                  {updateUserLoading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
                       Please Wait
