@@ -13,28 +13,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import CourseCard from "./CourseCard";
-
-const courses = [
-  {
-    id: 1,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-  {
-    id: 2,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-];
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const Profile = () => {
-  const isLoading = false;
+  const { data, isLoading } = useLoadUserQuery();
+
+  const { user } = data || {};
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin dark:text-white" />
+      </div>
+    );
 
   return (
     <div className="max-w-4xl mx-auto my-24 px-4 md:px-0">
@@ -43,7 +34,10 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage
+              src={user.photoUrl || "https://github.com/shadcn.png"}
+              alt="@shadcn"
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
@@ -53,7 +47,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Name:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                Ataberk Akkan
+                {user.name}
               </span>
             </h1>
           </div>
@@ -62,7 +56,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Email:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                ataberk@mail.com
+                {user.email}
               </span>
             </h1>
           </div>
@@ -71,7 +65,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100">
               Role:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                Instructor
+                {user.role.toUpperCase()}
               </span>
             </h1>
           </div>
@@ -129,13 +123,15 @@ const Profile = () => {
         <h1 className="font-medium text-lg">You&apos;re Courses</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {courses.length === 0 ? (
+          {user.enrolledCourses.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-96 text-gray-800 dark:text-white">
               <h2 className="text-xl font-semibold">No courses found</h2>
               <p className="mt-2">You have not enrolled in any courses yet.</p>
             </div>
           ) : (
-            courses.map((course, index) => <CourseCard key={index} />)
+            user.enrolledCourses.map((course) => (
+              <CourseCard key={course._id} />
+            ))
           )}
         </div>
       </div>
