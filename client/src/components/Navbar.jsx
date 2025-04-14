@@ -12,10 +12,28 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import DarkMode from "./DarkMode";
 import MobileNav from "./MobileNav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "@/features/api/authApi";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const user = true;
+
+  const navigate = useNavigate();
+
+  const [logout, { data, isSuccess }] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Logged out successfully!");
+      navigate("/login");
+    }
+  }, [data, isSuccess, navigate]);
 
   return (
     <div className="h-16 dark:bg-[#020817] bg-white items-center border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
@@ -53,7 +71,9 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to="/profile">Edit Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
 
                 <DropdownMenuSeparator />
