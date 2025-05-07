@@ -5,12 +5,22 @@ import App from "./App.jsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { Toaster } from "./components/ui/sonner";
+import { useLoadUserQuery } from "./features/api/authApi";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+export const Custom = ({ children }) => {
+  const { isLoading } = useLoadUserQuery();
+
+  return <>{isLoading ? <LoadingSpinner /> : children}</>;
+};
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <App />
-      <Toaster />
+      <Custom>
+        <App />
+        <Toaster />
+      </Custom>
     </Provider>
   </StrictMode>
 );

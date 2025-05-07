@@ -16,9 +16,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/features/api/authApi";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
-  const user = true;
+  const { user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
@@ -51,7 +52,7 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Avatar>
                   <AvatarImage
-                    src="https://github.com/shadcn.png"
+                    src={user?.photoUrl || "https://github.com/shadcn.png"}
                     alt="@shadcn"
                     className="hover:cursor-pointer"
                   />
@@ -76,15 +77,21 @@ const Navbar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
-                <DropdownMenuSeparator />
+                {user?.role === "instructor" && (
+                  <>
+                    <DropdownMenuSeparator />
 
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline">Login</Button>
-              <Button>Sign Up</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>Sign Up</Button>
             </div>
           )}
           <DarkMode />
