@@ -4,6 +4,7 @@ const COURSE_API = "http://localhost:5000/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
+  tagTypes: ["Course"],
   baseQuery: fetchBaseQuery({ baseUrl: COURSE_API, credentials: "include" }),
   endpoints: (builder) => ({
     createCourse: builder.mutation({
@@ -12,8 +13,16 @@ export const courseApi = createApi({
         method: "POST",
         body: { courseTitle, category },
       }),
+      invalidatesTags: ["Course"],
+    }),
+    getCreatorCourses: builder.query({
+      query: () => ({
+        url: "",
+        method: "GET",
+      }),
+      providesTags: ["Course"],
     }),
   }),
 });
 
-export const { useCreateCourseMutation } = courseApi;
+export const { useCreateCourseMutation, useGetCreatorCoursesQuery } = courseApi;

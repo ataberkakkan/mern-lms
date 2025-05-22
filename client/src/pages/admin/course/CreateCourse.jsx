@@ -36,12 +36,13 @@ const CreateCourse = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course created successfully");
+      navigate("/admin/courses");
     }
 
     if (error) {
       toast.error(error?.data?.message || "Something went wrong");
     }
-  }, [isSuccess, error, data]);
+  }, [isSuccess, error, data, navigate]);
 
   return (
     <div className="flex-1 mx-10">
