@@ -6,6 +6,12 @@ const RichTextEditor = ({ input, setInput }) => {
     setInput({ ...input, description: content });
   };
 
-  return <ReactQuill value={input.description} setValue={handleChange} />;
+  return (
+    <ReactQuill
+      theme="snow"
+      value={input.description}
+      onChange={handleChange}
+    />
+  );
 };
 export default RichTextEditor;
