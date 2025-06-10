@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import RichTextEditor from "@/components/RichTextEditor";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +19,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEditCourseMutation } from "@/features/api/courseApi";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -42,6 +46,9 @@ const CourseTab = () => {
 
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
+
+  const { data: courseByIdData, isLoading: courseByIdLoading } =
+    useGetCourseByIdQuery(courseId);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +98,22 @@ const CourseTab = () => {
   };
 
   useEffect(() => {
+    if (courseByIdData?.course) {
+      const course = courseByIdData?.course;
+
+      setInput({
+        courseTitle: course.courseTitle || "",
+        subTitle: course.subTitle || "",
+        description: course.description || "",
+        category: course.category || "",
+        courseLevel: course.courseLevel || "",
+        coursePrice: course.coursePrice || "",
+        courseThumbnail: "",
+      });
+    }
+  }, [courseByIdData]);
+
+  useEffect(() => {
     if (isSuccess && data) {
       toast.success(data.message || "Course updated successfully");
       navigate("/admin/courses");
@@ -102,6 +125,8 @@ const CourseTab = () => {
   }, [data, isSuccess, error, navigate]);
 
   const isPublished = true;
+
+  if (courseByIdLoading) return <LoadingSpinner />;
 
   return (
     <Card>

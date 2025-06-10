@@ -28,7 +28,7 @@ const CourseTable = () => {
       <Button onClick={() => navigate("create")}>Create a new course</Button>
 
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>A list of your courses.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Title</TableHead>
