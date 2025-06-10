@@ -1,11 +1,16 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCreateLectureMutation } from "@/features/api/courseApi";
+import {
+  useCreateLectureMutation,
+  useGetCourseLectureQuery,
+} from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+import Lecture from "./Lecture";
 
 const CreateLecture = () => {
   const params = useParams();
@@ -17,6 +22,12 @@ const CreateLecture = () => {
   const [createLecture, { data, isLoading, isSuccess, error }] =
     useCreateLectureMutation();
 
+  const {
+    data: lecture,
+    isLoading: lectureLoading,
+    error: lectureError,
+  } = useGetCourseLectureQuery(courseId);
+
   const createLectureHandler = async () => {
     await createLecture({ lectureTitle, courseId });
   };
@@ -24,13 +35,12 @@ const CreateLecture = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Lecture created successfully");
-      navigate(`/admin/courses/${courseId}`);
     }
 
     if (error) {
       toast.error(error?.data?.message || "Something went wrong");
     }
-  }, [isSuccess, data, error, navigate, courseId]);
+  }, [isSuccess, data, error, courseId]);
 
   return (
     <div className="flex-1 mx-10">
@@ -70,6 +80,20 @@ const CreateLecture = () => {
               "Create Lecture"
             )}
           </Button>
+        </div>
+
+        <div className="mt-10">
+          {lectureLoading ? (
+            <LoadingSpinner />
+          ) : lectureError ? (
+            <p>Failed to load lectures.</p>
+          ) : lecture?.lectures?.length === 0 ? (
+            <p>No lectures found for this course.</p>
+          ) : (
+            lecture?.lectures?.map((lecture, index) => (
+              <Lecture key={lecture._id} lecture={lecture} index={index} />
+            ))
+          )}
         </div>
       </div>
     </div>
