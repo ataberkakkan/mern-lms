@@ -146,7 +146,7 @@ const CourseTab = () => {
 
   return (
     <Card>
-      <CardHeader className="flex  flex-row justify-between">
+      <CardHeader className="flex flex-row justify-between">
         <div>
           <CardTitle>Basic Information</CardTitle>
           <CardDescription>
