@@ -22,6 +22,7 @@ import {
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -46,6 +47,8 @@ const CourseTab = () => {
 
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
+
+  const [publishCourse] = usePublishCourseMutation();
 
   const { data: courseByIdData, isLoading: courseByIdLoading } =
     useGetCourseByIdQuery(courseId);
@@ -97,6 +100,21 @@ const CourseTab = () => {
     await editCourse({ formData, courseId });
   };
 
+  const publishStatusHandler = async (action) => {
+    try {
+      const response = await publishCourse({ courseId, query: action });
+
+      if (response.data) {
+        toast.success(
+          response.data.message || "Publish status changed successfully"
+        );
+      }
+    } catch {
+      toast.error("Failed to change publish status");
+      return;
+    }
+  };
+
   useEffect(() => {
     if (courseByIdData?.course) {
       const course = courseByIdData?.course;
@@ -124,8 +142,6 @@ const CourseTab = () => {
     }
   }, [data, isSuccess, error, navigate]);
 
-  const isPublished = true;
-
   if (courseByIdLoading) return <LoadingSpinner />;
 
   return (
@@ -140,8 +156,15 @@ const CourseTab = () => {
         </div>
 
         <div className="space-x-2">
-          <Button variant="outline">
-            {isPublished ? "Unpublish" : "Publish"}
+          <Button
+            variant="outline"
+            onClick={() =>
+              publishStatusHandler(
+                courseByIdData?.course.isPublished ? "false" : "true"
+              )
+            }
+          >
+            {courseByIdData?.course.isPublished ? "Unpublish" : "Publish"}
           </Button>
 
           <Button>Remove Course</Button>
