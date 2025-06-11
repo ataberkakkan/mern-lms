@@ -1,23 +1,6 @@
 import CourseCard from "./CourseCard";
 
-const courses = [
-  {
-    id: 1,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-  {
-    id: 2,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-];
+const courses = [];
 
 const MyLearning = () => {
   const isLoading = false;
@@ -39,7 +22,7 @@ const MyLearning = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {courses.map((course, index) => (
-              <CourseCard key={index} />
+              <CourseCard key={index} course={course} />
             ))}
           </div>
         )}

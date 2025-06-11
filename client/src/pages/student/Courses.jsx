@@ -1,27 +1,24 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import CourseCard from "./CourseCard";
-
-const courses = [
-  {
-    id: 1,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-  {
-    id: 2,
-    title: "Full Stack Next.js Course",
-    instructor: "Ataberk Akkan",
-    price: "$139",
-    thumbnail: "https://img-c.udemycdn.com/course/750x422/3873464_403c_3.jpg",
-    level: "Beginner",
-  },
-];
+import { useGetPublishedCoursesQuery } from "@/features/api/courseApi";
+import { TriangleAlert } from "lucide-react";
 
 const Courses = () => {
-  const isLoading = false;
+  const { data, isLoading, error } = useGetPublishedCoursesQuery();
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen max-w-7xl mx-auto p-6">
+        <TriangleAlert className="h-40 w-40 text-red-700" />
+        <h2 className="text-gray-800 dark:text-gray-300 font-bold text-4xl">
+          404
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 text-xl font-semibold mt-2">
+          No Courses Found. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 dark:bg-[#141414]">
@@ -32,7 +29,9 @@ const Courses = () => {
             ? Array.from({ length: 8 }).map((_, index) => (
                 <CourseSkeleton key={index} />
               ))
-            : courses.map((course, index) => <CourseCard key={index} />)}
+            : data?.courses.map((course, index) => (
+                <CourseCard key={index} course={course} />
+              ))}
         </div>
       </div>
     </div>
