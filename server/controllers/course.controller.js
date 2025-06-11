@@ -1,6 +1,6 @@
 import Course from "../models/course.model.js";
 import Lecture from "../models/lecture.model.js";
-import { deleteMedia, uploadMedia } from "../utils/cloudinary.js";
+import { deleteMedia, deleteVideo, uploadMedia } from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -265,7 +265,7 @@ export const removeLecture = async (req, res) => {
     }
 
     if (lecture.publicId) {
-      await deleteVideoFromCloudinary(lecture.publicId);
+      await deleteVideo(lecture.publicId);
     }
 
     await Course.updateOne(
