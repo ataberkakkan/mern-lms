@@ -10,8 +10,12 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const CourseDetail = () => {
+  const params = useParams();
+  const { courseId } = params;
+
   const purchasedCourse = false;
 
   return (
@@ -69,7 +73,7 @@ const CourseDetail = () => {
               {purchasedCourse ? (
                 <Button className="w-full">Continue</Button>
               ) : (
-                <BuyCourseButton />
+                <BuyCourseButton courseId={courseId} />
               )}
             </CardFooter>
           </Card>

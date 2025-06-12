@@ -8,6 +8,7 @@ import connectDB from "./database/db.js";
 import userRoutes from "./routes/user.routes.js";
 import courseRoutes from "./routes/course.route.js";
 import mediaRoute from "./routes/media.route.js";
+import purchaseRoutes from "./routes/coursePurchase.route.js";
 
 dotenv.config();
 const port = process.env.PORT || 8000;
@@ -29,5 +30,6 @@ app.use(
 app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/purchase", purchaseRoutes);
 
 app.listen(port, () => console.log(`Server is running on port: ${port}`));
