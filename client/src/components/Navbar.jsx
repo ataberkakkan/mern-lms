@@ -103,7 +103,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E-Learning</h1>
-        <MobileNav />
+        <MobileNav user={user} handleLogout={handleLogout} />
       </div>
     </div>
   );

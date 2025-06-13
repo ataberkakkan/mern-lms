@@ -11,10 +11,9 @@ import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
 import DarkMode from "./DarkMode";
 import { Separator } from "./ui/separator";
+import { Link } from "react-router-dom";
 
-const MobileNav = () => {
-  const role = "instructor";
-
+const MobileNav = ({ user, handleLogout }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -28,18 +27,23 @@ const MobileNav = () => {
           <DarkMode />
         </SheetHeader>
         <Separator className="my-3" />
-        <nav className="flex flex-col space-y-4">
-          <span>My Learning</span>
-          <span>Edit Profile</span>
-          <span>Log out</span>
+        <nav className="flex flex-col items-start space-y-4">
+          <Link to="/my-learning">My Learning</Link>
+          <Link to="/profile">Edit Profile</Link>
+          {user?.role === "instructor" && (
+            <SheetFooter>
+              <SheetClose asChild>
+                <Link to="/admin/dashboard">Dashboard</Link>
+              </SheetClose>
+            </SheetFooter>
+          )}
         </nav>
-        {role === "instructor" && (
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button>Dashboard</Button>
-            </SheetClose>
-          </SheetFooter>
-        )}
+
+        <Link asChild>
+          <Button variant="outline" onClick={handleLogout}>
+            Log out
+          </Button>
+        </Link>
       </SheetContent>
     </Sheet>
   );
