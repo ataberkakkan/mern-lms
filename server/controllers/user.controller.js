@@ -95,7 +95,12 @@ export const logout = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate({
+        path: "enrolledCourses",
+        populate: { path: "creator", select: "name photoUrl" },
+      });
 
     if (!user) {
       return res.status(404).json({

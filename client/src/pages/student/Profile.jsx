@@ -42,6 +42,8 @@ const Profile = () => {
 
   const { user } = data || {};
 
+  console.log(user);
+
   const handleUpdateUser = async () => {
     const formData = new FormData();
     formData.append("name", name);
@@ -171,14 +173,14 @@ const Profile = () => {
         <h1 className="font-medium text-lg">You&apos;re Courses</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {user?.enrolledCourses.length === 0 ? (
+          {user?.enrolledCourses?.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-96 text-gray-800 dark:text-white">
               <h2 className="text-xl font-semibold">No courses found</h2>
               <p className="mt-2">You have not enrolled in any courses yet.</p>
             </div>
           ) : (
-            user?.enrolledCourses.map((course) => (
-              <CourseCard key={course._id} />
+            user.enrolledCourses.map((course, index) => (
+              <CourseCard key={index} course={course} />
             ))
           )}
         </div>
