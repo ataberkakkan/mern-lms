@@ -7,6 +7,7 @@ import { store } from "./app/store";
 import { Toaster } from "./components/ui/sonner";
 import { useLoadUserQuery } from "./features/api/authApi";
 import LoadingSpinner from "./components/LoadingSpinner";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 export const Custom = ({ children }) => {
   const { isLoading } = useLoadUserQuery();
@@ -16,11 +17,13 @@ export const Custom = ({ children }) => {
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <Custom>
-        <App />
-        <Toaster />
-      </Custom>
-    </Provider>
+    <ThemeProvider>
+      <Provider store={store}>
+        <Custom>
+          <App />
+          <Toaster />
+        </Custom>
+      </Provider>
+    </ThemeProvider>
   </StrictMode>
 );
