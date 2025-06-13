@@ -69,7 +69,7 @@ const Filter = ({ handleFilterChange }) => {
           <div key={category.id} className="flex items-center space-x-2 my-2">
             <Checkbox
               id={category.id}
-              onCheckedChange={() => handleCategoryChange(category.id)}
+              onCheckedChange={() => handleCategoryChange(category.label)}
             />
             <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               {category.label}
